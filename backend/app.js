@@ -1,20 +1,29 @@
 import dotenv from 'dotenv';
 dotenv.config();
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
 import express from 'express';
-import connectDB from '../backend/utils/db.js'
 import cors from 'cors';
 
-// All routes
-import adminRoute from '../backend/route/adminRoute.js';
-import productRoute from '../backend/route/productRoute.js';
 
+
+// All routes
+import connectDB from './utils/db.js'
+import adminRoute from './route/adminRoute.js';
+import productRoute from './route/productRoute.js';
 
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
 connectDB();
+
+// Health check
+app.get("/", (req, res) => {
+    res.send("Kalynda API is running 🚀");
+});
 
 // Use Routes
 app.use('/api/admin', adminRoute);
