@@ -1,5 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home.jsx';
+import Shop from './pages/Shop.jsx';
+import Bag from './pages/Bag.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import Contact from './pages/Contact.jsx';
 import NotFound from './pages/NotFound.jsx';
@@ -8,42 +10,52 @@ import AdminRegister from './pages/AdminRegister.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import AdminProductForm from './pages/AdminProductForm.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import CartFab from './components/CartFab.jsx';
 
 export default function App() {
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname.startsWith('/admin');
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/product/:id" element={<ProductDetail />} />
-      <Route path="/contact" element={<Contact />} />
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/bag" element={<Bag />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/contact" element={<Contact />} />
 
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin/register" element={<AdminRegister />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/register" element={<AdminRegister />} />
 
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/products/new"
-        element={
-          <ProtectedRoute>
-            <AdminProductForm />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/products/:id/edit"
-        element={
-          <ProtectedRoute>
-            <AdminProductForm />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products/new"
+          element={
+            <ProtectedRoute>
+              <AdminProductForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products/:id/edit"
+          element={
+            <ProtectedRoute>
+              <AdminProductForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      {!isAdminRoute && <CartFab />}
+    </>
   );
 }

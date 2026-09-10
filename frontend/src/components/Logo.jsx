@@ -7,6 +7,7 @@ import { useState } from 'react';
  */
 export default function Logo({ light = false, className = '' }) {
   const [failed, setFailed] = useState(false);
+  const sizeClass = className || 'h-24';
 
   if (!failed) {
     return (
@@ -14,14 +15,14 @@ export default function Logo({ light = false, className = '' }) {
         src="/logo.png"
         alt="KALYNDA"
         onError={() => setFailed(true)}
-        className={`h-24 w-auto object-contain ${className}`}
+        className={`w-auto object-contain ${sizeClass}`}
       />
     );
   }
 
   return (
     <span
-      className={`font-display text-2xl tracking-wide ${light ? 'text-blush' : 'text-ink'} ${className}`}
+      className={`font-display text-2xl tracking-wide ${light ? 'text-blush' : 'text-ink dark:text-blush'} ${className}`}
     >
       KALYNDA
     </span>

@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
 
-// Drop your own photos into /public as hero-1.jpg, hero-2.jpg, hero-3.jpg
-// (or .png) and they'll appear here automatically as a slideshow.
-// Add fewer or more by editing this list.
 const CANDIDATE_IMAGES = ['/hero-1.jpg', '/hero-2.jpg', '/hero-3.jpg', '/hero-4.jpg','/hero-5.jpg', '/hero-6.jpg', '/hero-7.jpg'];
 
 export default function HeroSlideshow({ interval = 4500 }) {

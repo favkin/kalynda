@@ -15,8 +15,8 @@ export default function AdminDashboard() {
   const loadProducts = () => {
     setLoading(true);
     api
-      .getAllProducts()
-      .then(setProducts)
+      .getAllProducts({ limit: 50, sort: 'newest' })
+      .then((data) => { setProducts(data.products)})
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   };

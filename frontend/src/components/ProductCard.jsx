@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { resolveMediaUrl, isVideoUrl, formatPrice } from '../utils/media.js';
+import { Images } from 'lucide-react';
+import { resolveMediaUrl, resolveMediaList, isVideoUrl, formatPrice } from '../utils/media.js';
 import { useCart } from '../context/CartContext.jsx';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, featured = false }) {
   const mediaUrl = resolveMediaUrl(product);
+  const mediaCount = resolveMediaList(product).length;
   const outOfStock = Number(product.stock) <= 0;
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
@@ -20,9 +22,15 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/product/${product._id}`}
-      className="group relative flex flex-col bg-white dark:bg-studio-raised rounded-2xl overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-plum/10"
+      className={`group relative flex bg-white dark:bg-studio-raised rounded-2xl overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-plum/10 ${
+        featured ? 'flex-col sm:flex-row h-full' : 'flex-col'
+      }`}
     >
-      <div className="aspect-square bg-blush-deep dark:bg-studio overflow-hidden relative">
+      <div
+        className={`bg-blush-deep dark:bg-studio overflow-hidden relative ${
+          featured ? 'aspect-square sm:aspect-auto sm:w-1/2' : 'aspect-square'
+        }`}
+      >
         {mediaUrl ? (
           isVideoUrl(mediaUrl) ? (
             <video src={mediaUrl} className="w-full h-full object-cover" muted playsInline />
@@ -47,6 +55,12 @@ export default function ProductCard({ product }) {
           </span>
         </div>
 
+        {featured && (
+          <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.15em] font-bold bg-gold text-ink rounded-full px-3 py-1">
+            Editor's pick
+          </span>
+        )}
+
         {outOfStock && (
           <div className="absolute inset-0 bg-ink/50 flex items-center justify-center">
             <span className="text-white text-xs uppercase tracking-[0.15em] font-semibold border border-white/60 rounded-full px-4 py-1.5">
@@ -54,13 +68,31 @@ export default function ProductCard({ product }) {
             </span>
           </div>
         )}
+
+        {mediaCount > 1 && (
+          <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-ink/55 backdrop-blur text-white text-[10px] font-semibold rounded-full px-2 py-1">
+            <Images size={11} /> {mediaCount}
+          </div>
+        )}
       </div>
 
-      <div className="p-5 flex-1 flex flex-col gap-1.5">
-        <h3 className="font-display text-xl leading-snug">{product.name}</h3>
-        <p className="text-sm text-ink/55 dark:text-blush/55 line-clamp-2">{product.description}</p>
+      <div
+        className={`p-5 flex-1 flex flex-col gap-1.5 ${
+          featured ? 'sm:w-1/2 sm:justify-center sm:p-8' : ''
+        }`}
+      >
+        <h3 className={`font-display leading-snug ${featured ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
+          {product.name}
+        </h3>
+        <p
+          className={`text-sm text-ink/65 dark:text-blush/55 ${
+            featured ? 'sm:text-base line-clamp-3' : 'line-clamp-2'
+          }`}
+        >
+          {product.description}
+        </p>
 
-        <div className="mt-auto pt-3 flex items-center justify-between gap-3">
+        <div className={`flex items-center justify-between gap-3 ${featured ? 'mt-5' : 'mt-auto pt-3'}`}>
           {!outOfStock && (
             <span className="text-[11px] uppercase tracking-[0.12em] text-gold font-semibold">
               {product.stock} left

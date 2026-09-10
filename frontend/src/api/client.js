@@ -32,12 +32,18 @@ export const api = {
   login: (payload) => request('/admin/login', { method: 'POST', body: payload }),
 
   // Products
-  getAllProducts: () => request('/product/allProducts'),
+  getHomeProducts: () => request('/product/homeProducts'),
+  getAllProducts: (params = {}) => {
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')
+    ).toString();
+    return request(`/product/allProducts${query ? `?${query}` : ''}`);
+  },
   getProduct: (id) => request(`/product/singleProduct/${id}`),
   createProduct: (formData, token) =>
     request('/product/newProduct', { method: 'POST', body: formData, token, isForm: true }),
   updateProduct: (id, payload, token) =>
-    request(`/product/updateSingle/${id}`, { method: 'PATCH', body: payload, token }),
+    request(`/product/updateSingle/${id}`, { method: 'PATCH', body: payload, token, isForm: true }),
   deleteProduct: (id, token) =>
     request(`/product/deleteSingle/${id}`, { method: 'DELETE', token })
 };

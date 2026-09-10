@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
+import MediaGallery from '../components/MediaGallery.jsx';
 import { api } from '../api/client.js';
-import { resolveMediaUrl, isVideoUrl, formatPrice, buildWhatsAppOrderLink } from '../utils/media.js';
+import { resolveMediaList, formatPrice, buildWhatsAppOrderLink } from '../utils/media.js';
 import { useCart } from '../context/CartContext.jsx';
 
 export default function ProductDetail() {
@@ -28,7 +29,7 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen bg-blush dark:bg-plum-dark text-ink dark:text-blush transition-colors">
         <Navbar />
-        <p className="max-w-6xl mx-auto px-6 py-16 text-ink/50 dark:text-blush/50 text-sm">Loading…</p>
+        <p className="max-w-6xl mx-auto px-6 py-16 text-ink/60 dark:text-blush/55 text-sm font-medium">Loading…</p>
         <Footer />
       </div>
     );
@@ -40,7 +41,7 @@ export default function ProductDetail() {
         <Navbar />
         <div className="max-w-6xl mx-auto px-6 py-20 text-center">
           <p className="font-display text-3xl mb-2">Product not found</p>
-          <p className="text-ink/50 dark:text-blush/50 text-sm mb-6">{error || 'It may have been removed.'}</p>
+          <p className="text-ink/60 dark:text-blush/55 text-sm mb-6 font-medium">{error || 'It may have been removed.'}</p>
           <Link to="/" className="text-gloss text-sm underline">
             ← Back to the collection
           </Link>
@@ -50,7 +51,7 @@ export default function ProductDetail() {
     );
   }
 
-  const mediaUrl = resolveMediaUrl(product);
+  const mediaList = resolveMediaList(product);
   const outOfStock = Number(product.stock) <= 0;
   const whatsappLink = buildWhatsAppOrderLink(product);
 
@@ -64,24 +65,12 @@ export default function ProductDetail() {
     <div className="min-h-screen bg-blush dark:bg-plum-dark text-ink dark:text-blush transition-colors">
       <Navbar />
       <main className="max-w-6xl mx-auto px-6 py-14">
-        <Link to="/" className="text-xs uppercase tracking-[0.15em] text-ink/50 dark:text-blush/50 hover:text-gloss transition">
+        <Link to="/" className="text-xs uppercase tracking-[0.15em] text-ink/60 dark:text-blush/55 font-semibold hover:text-gloss transition">
           ← Back to the collection
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-14 mt-8">
-          <div className="aspect-square bg-blush-deep dark:bg-studio rounded-2xl overflow-hidden relative">
-            {mediaUrl ? (
-              isVideoUrl(mediaUrl) ? (
-                <video src={mediaUrl} className="w-full h-full object-cover" controls />
-              ) : (
-                <img src={mediaUrl} alt={product.name} className="w-full h-full object-cover" />
-              )
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-ink/30 dark:text-blush/30 text-sm">
-                no image
-              </div>
-            )}
-          </div>
+          <MediaGallery media={mediaList} name={product.name} />
 
           <div className="flex flex-col">
             <h1 className="font-display text-4xl leading-tight mb-3">{product.name}</h1>
@@ -106,7 +95,7 @@ export default function ProductDetail() {
 
             {!outOfStock && (
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-xs uppercase tracking-[0.1em] text-ink/50 dark:text-blush/50">
+                <span className="text-xs uppercase tracking-[0.1em] text-ink/60 dark:text-blush/55 font-semibold">
                   Quantity
                 </span>
                 <div className="flex items-center gap-3">
@@ -116,7 +105,7 @@ export default function ProductDetail() {
                   >
                     −
                   </button>
-                  <span className="w-6 text-center">{quantity}</span>
+                  <span className="w-6 text-center font-semibold">{quantity}</span>
                   <button
                     onClick={() => setQuantity((q) => q + 1)}
                     className="w-8 h-8 rounded-full border border-line dark:border-studio-line hover:border-gloss transition"
