@@ -1,11 +1,13 @@
 import express from 'express';
 import { 
     createNewProduct,
+    getHomeProducts,
     getAllProducts,
     getSingleProductById,
     updateProductById,
     deleteProductById
  } from "../controller/productController.js";
+
 
 
 const router = express.Router();
@@ -14,14 +16,15 @@ const router = express.Router();
 import { roleMiddileware } from '../middleware/role.js';
 import { authMiddleware } from '../middleware/auth.js';
 import  upload  from '../middleware/cloudinaryUpload.js';
-// import upload from '../middleware/multer.js';
+import validateProductMedia from '../middleware/validateProductMedia.js'
 
 
 // routes
-router.post('/newProduct', upload.single('auto'), authMiddleware, roleMiddileware('admin'), createNewProduct);
+router.post('/newProduct', authMiddleware, upload.array('media', 10), validateProductMedia, roleMiddileware('admin'), createNewProduct);
+router.get('/homeProducts', getHomeProducts);
 router.get('/allProducts', getAllProducts);
 router.get('/singleProduct/:id', getSingleProductById);
-router.patch('/updateSingle/:id', authMiddleware, upload.single('auto'), updateProductById);
+router.patch('/updateSingle/:id', authMiddleware, upload.array('media', 10), validateProductMedia, updateProductById);
 router.delete('/deleteSingle/:id', authMiddleware, deleteProductById);
 
 
